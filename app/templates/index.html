@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask Docker App - Многоконтейнерное приложение</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-docker"></i>
+                <span>Flask Docker Pro</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/" class="{% if not section %}active{% endif %}">Главная</a></li>
+                <li><a href="/admin" class="{% if section == 'admin' %}active{% endif %}">Админка</a></li>
+                <li><a href="/api/stats" target="_blank">API Статус</a></li>
+                <li><a href="/api/users" target="_blank">API Пользователи</a></li>
+                <li><a href="/api/messages" target="_blank">API Сообщения</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="hero">
+            <h1><i class="fas fa-layer-group"></i> Многоконтейнерное Flask приложение</h1>
+            <p class="subtitle">Flask + PostgreSQL + Docker Volume + Nginx в Docker Compose</p>
+        </header>
+
+        <!-- Статистика базы данных -->
+        <div class="database-section">
+            <h2><i class="fas fa-database"></i> Работа с базой данных</h2>
+            
+            <div class="db-stats">
+                <div class="stat-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Пользователи</h3>
+                    <p class="stat-number">{{ users_count }}</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-comments"></i>
+                    <h3>Сообщения</h3>
+                    <p class="stat-number">{{ messages_count }}</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-hdd"></i>
+                    <h3>Docker Volume</h3>
+                    <p class="stat-status active">Активен</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-server"></i>
+                    <h3>Контейнеры</h3>
+                    <p class="stat-number">3</p>
+                </div>
+            </div>
+
+            <div class="recent-messages">
+                <h3><i class="fas fa-history"></i> Последние сообщения из БД:</h3>
+                <div class="messages-list">
+                    {% for msg in recent_messages %}
+                    <div class="message-item">
+                        <div class="message-header">
+                            <strong>{{ msg.author.username if msg.author else 'Unknown' }}</strong>
+                            <span class="message-time">{{ msg.created_at.strftime('%H:%M') }}</span>
+                        </div>
+                        <div class="message-content">{{ msg.message }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="docker-volume-info">
+                <h3><i class="fas fa-box-open"></i> Docker Volume в работе</h3>
+                <p>Данные PostgreSQL хранятся в постоянном томе <code>postgres_data</code>:</p>
+                <div class="code-block">
+                    <code>volumes:<br>  - postgres_data:/var/lib/postgresql/data</code>
+                </div>
+                <p>Это обеспечивает сохранность данных при перезапуске или удалении контейнеров.</p>
+            </div>
+        </div>
+
+        <!-- Архитектура приложения -->
+        <div class="architecture-section">
+            <h2><i class="fas fa-sitemap"></i> Архитектура приложения</h2>
+            
+            <div class="arch-diagram-detailed">
+                <div class="arch-component">
+                    <div class="arch-icon web">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h4>Flask App</h4>
+                    <p>Контейнер: <strong>web</strong></p>
+                    <p>Порт: 5000</p>
+                    <p>Образ: Собственный</p>
+                </div>
+                
+                <div class="arch-arrow">↔</div>
+                
+                <div class="arch-component">
+                    <div class="arch-icon db">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h4>PostgreSQL</h4>
+                    <p>Контейнер: <strong>db</strong></p>
+                    <p>Порт: 5432</p>
+                    <p>Volume: postgres_data</p>
+                </div>
+                
+                <div class="arch-arrow">↔</div>
+                
+                <div class="arch-component">
+                    <div class="arch-icon proxy">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <h4>Nginx</h4>
+                    <p>Контейнер: <strong>nginx</strong></p>
+                    <p>Порт: 80</p>
+                    <p>Образ: nginx:alpine</p>
+                </div>
+            </div>
+
+            <div class="network-info">
+                <h4><i class="fas fa-network-wired"></i> Docker Network</h4>
+                <p>Все контейнеры подключены к внутренней сети <code>app-network</code></p>
+                <p>Контейнеры общаются по именам сервисов (web, db, nginx)</p>
+            </div>
+        </div>
+
+        <!-- Команды Docker Compose -->
+        <div class="commands-section">
+            <h2><i class="fas fa-terminal"></i> Управление приложением</h2>
+            
+            <div class="commands-grid">
+                <div class="command-group">
+                    <h3><i class="fas fa-play"></i> Запуск</h3>
+                    <div class="command-block">
+                        <code>docker-compose up --build</code>
+                        <div class="command-desc">Сборка и запуск всех контейнеров</div>
+                    </div>
+                    <div class="command-block">
+                        <code>docker-compose up -d</code>
+                        <div class="command-desc">Запуск в фоновом режиме</div>
+                    </div>
+                </div>
+                
+                <div class="command-group">
+                    <h3><i class="fas fa-stop"></i> Остановка</h3>
+                    <div class="command-block">
+                        <code>docker-compose down</code>
+                        <div class="command-desc">Остановка контейнеров</div>
+                    </div>
+                    <div class="command-block">
+                        <code>docker-compose down -v</code>
+                        <div class="command-desc">Остановка с удалением volumes</div>
+                    </div>
+                </div>
+                
+                <div class="command-group">
+                    <h3><i class="fas fa-eye"></i> Мониторинг</h3>
+                    <div class="command-block">
+                        <code>docker-compose ps</code>
+                        <div class="command-desc">Статус контейнеров</div>
+                    </div>
+                    <div class="command-block">
+                        <code>docker-compose logs -f</code>
+                        <div class="command-desc">Просмотр логов в реальном времени</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Технологии -->
+        <div class="technologies-section">
+            <h2><i class="fas fa-cogs"></i> Используемые технологии</h2>
+            
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fab fa-python"></i>
+                    </div>
+                    <h3>Python Flask</h3>
+                    <p>Веб-фреймворк для backend</p>
+                    <p>Версия: 2.3.2</p>
+                </div>
+                
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3>PostgreSQL</h3>
+                    <p>Реляционная база данных</p>
+                    <p>Версия: 15-alpine</p>
+                </div>
+                
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fab fa-docker"></i>
+                    </div>
+                    <h3>Docker</h3>
+                    <p>Контейнеризация приложения</p>
+                    <p>Docker Compose для оркестрации</p>
+                </div>
+                
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <h3>Nginx</h3>
+                    <p>Обратный прокси и балансировщик</p>
+                    <p>Версия: alpine</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Endpoints -->
+        <div class="api-section">
+            <h2><i class="fas fa-code"></i> Доступные API Endpoints</h2>
+            
+            <div class="api-endpoints">
+                <div class="endpoint">
+                    <span class="method get">GET</span>
+                    <span class="url">/api/stats</span>
+                    <span class="desc">Статистика приложения и БД</span>
+                </div>
+                <div class="endpoint">
+                    <span class="method get">GET</span>
+                    <span class="url">/api/users</span>
+                    <span class="desc">Список всех пользователей</span>
+                </div>
+                <div class="endpoint">
+                    <span class="method get">GET</span>
+                    <span class="url">/api/messages</span>
+                    <span class="desc">Получение сообщений</span>
+                </div>
+                <div class="endpoint">
+                    <span class="method post">POST</span>
+                    <span class="url">/api/messages</span>
+                    <span class="desc">Создание нового сообщения</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Демонстрация работы Volume -->
+        <div class="volume-demo">
+            <h2><i class="fas fa-vial"></i> Демонстрация работы Docker Volume</h2>
+            
+            <div class="demo-steps">
+                <div class="demo-step">
+                    <div class="step-number">1</div>
+                    <h4>Запустите приложение</h4>
+                    <p>Данные сохраняются в volume</p>
+                </div>
+                
+                <div class="demo-arrow">→</div>
+                
+                <div class="demo-step">
+                    <div class="step-number">2</div>
+                    <h4>Остановите контейнеры</h4>
+                    <p><code>docker-compose down</code></p>
+                </div>
+                
+                <div class="demo-arrow">→</div>
+                
+                <div class="demo-step">
+                    <div class="step-number">3</div>
+                    <h4>Запустите снова</h4>
+                    <p><code>docker-compose up -d</code></p>
+                </div>
+                
+                <div class="demo-arrow">→</div>
+                
+                <div class="demo-step">
+                    <div class="step-number">4</div>
+                    <h4>Данные сохранились!</h4>
+                    <p>Пользователи и сообщения на месте</p>
+                </div>
+            </div>
+            
+            <div class="volume-explanation">
+                <p><strong>Docker Volume</strong> - это механизм для сохранения данных, созданных и используемых Docker контейнерами.</p>
+                <p>Volume отделён от жизненного цикла контейнера, поэтому данные сохраняются даже после удаления контейнера.</p>
+            </div>
+        </div>
+
+        {% if section == 'admin' %}
+        <!-- Админ-панель -->
+        <div class="admin-section">
+            <h1><i class="fas fa-user-shield"></i> Панель администратора</h1>
+            
+            <div class="admin-cards">
+                <div class="admin-card">
+                    <h3><i class="fas fa-database"></i> Управление БД</h3>
+                    <div class="admin-actions">
+                        <button class="btn btn-primary" onclick="location.href='/api/stats'">
+                            <i class="fas fa-chart-bar"></i> Статистика
+                        </button>
+                        <button class="btn btn-secondary" onclick="location.href='/api/users'">
+                            <i class="fas fa-users"></i> Пользователи
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="admin-card">
+                    <h3><i class="fas fa-container-storage"></i> Docker Контейнеры</h3>
+                    <div class="container-status">
+                        <div class="status-item">
+                            <span class="status-dot running"></span>
+                            <span>Flask Web: Запущен</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-dot running"></span>
+                            <span>PostgreSQL: Запущен</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-dot running"></span>
+                            <span>Nginx: Запущен</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="admin-card">
+                    <h3><i class="fas fa-hdd"></i> Docker Volumes</h3>
+                    <div class="volume-list">
+                        <div class="volume-item">
+                            <i class="fas fa-database"></i>
+                            <div>
+                                <strong>postgres_data</strong>
+                                <p>Хранилище данных PostgreSQL</p>
+                            </div>
+                            <span class="volume-size">~50 MB</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p><i class="fas fa-code-branch"></i> Многоконтейнерное Flask приложение • Docker Compose • PostgreSQL • {{ server_time }}</p>
+            <div class="footer-tech">
+                <i class="fab fa-python"></i>
+                <i class="fab fa-docker"></i>
+                <i class="fas fa-database"></i>
+                <i class="fab fa-nginx"></i>
+                <i class="fab fa-html5"></i>
+                <i class="fab fa-css3-alt"></i>
+            </div>
+            <p class="footer-info">Контейнер ID: {{ container_id if container_id else 'local' }} • Порт: 5000 • База данных: PostgreSQL 15</p>
+        </div>
+    </footer>
+
+    <script>
+        // Анимация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            // Анимация карточек
+            const cards = document.querySelectorAll('.stat-card, .tech-card, .admin-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+            
+            // Анимация сообщений
+            const messages = document.querySelectorAll('.message-item');
+            messages.forEach((msg, index) => {
+                setTimeout(() => {
+                    msg.style.opacity = '1';
+                    msg.style.transform = 'translateX(0)';
+                }, index * 150);
+            });
+            
+            // Обновление времени
+            function updateTime() {
+                const timeElements = document.querySelectorAll('.time-display');
+                if (timeElements.length > 0) {
+                    const now = new Date();
+                    timeElements.forEach(el => {
+                        el.textContent = now.toLocaleTimeString('ru-RU');
+                    });
+                }
+            }
+            
+            setInterval(updateTime, 1000);
+            
+            // Подсветка текущего endpoint
+            const currentPath = window.location.pathname;
+            document.querySelectorAll('.nav-menu a').forEach(link => {
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('active');
+                }
+            });
+        });
+        
+        // Создание тестового сообщения через API
+        function createTestMessage() {
+            fetch('/api/messages', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user_id: 1,
+                    message: 'Новое тестовое сообщение из веб-интерфейса!'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Сообщение создано! ID: ' + data.message_id);
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Ошибка при создании сообщения');
+            });
+        }
+    </script>
+</body>
+</html>

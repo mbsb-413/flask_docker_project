@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  # Веб-приложение Flask
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/flaskdb
+      - SECRET_KEY=your-secret-key-here
+    depends_on:
+      - db
+    volumes:
+      - ./app:/app
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # База данных PostgreSQL
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=flaskdb
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Опционально: Nginx для нагрузки (солиднее выглядит)
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - web
+    networks:
+      - app-network
+    restart: unless-stopped
+
+# Docker Volumes для постоянного хранения данных
+volumes:
+  postgres_data:
+    name: flask_postgres_data
+
+# Сеть для связи контейнеров
+networks:
+  app-network:
+    driver: bridge

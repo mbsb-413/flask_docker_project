@@ -1,0 +1,669 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #1a2980 0%, #26d0ce 100%);
+    color: #333;
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+.navbar {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1a2980;
+}
+
+.logo i {
+    font-size: 2rem;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: #555;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.nav-menu a:hover,
+.nav-menu a.active {
+    background: linear-gradient(135deg, #1a2980 0%, #26d0ce 100%);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.container {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+
+.hero {
+    text-align: center;
+    margin: 3rem 0;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.hero h1 {
+    font-size: 2.8rem;
+    margin-bottom: 1rem;
+}
+
+.subtitle {
+    font-size: 1.3rem;
+    opacity: 0.95;
+    font-weight: 300;
+}
+
+/* Database Section */
+.database-section {
+    background: white;
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin: 3rem 0;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.database-section h2 {
+    color: #1a2980;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.8rem;
+}
+
+.db-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin: 2.5rem 0;
+}
+
+.stat-card {
+    text-align: center;
+    padding: 1.8rem;
+    background: linear-gradient(135deg, #1a2980 0%, #26d0ce 100%);
+    color: white;
+    border-radius: 15px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(26, 41, 128, 0.3);
+}
+
+.stat-card i {
+    font-size: 3rem;
+    margin-bottom: 1.2rem;
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: bold;
+    margin: 0.8rem 0;
+}
+
+.stat-status {
+    padding: 0.4rem 1.2rem;
+    border-radius: 25px;
+    font-weight: 500;
+    display: inline-block;
+    font-size: 0.9rem;
+}
+
+.stat-status.active {
+    background: #4CAF50;
+    color: white;
+}
+
+.recent-messages {
+    margin: 2.5rem 0;
+    padding: 2rem;
+    background: #f8fafc;
+    border-radius: 15px;
+    border: 1px solid #e2e8f0;
+}
+
+.recent-messages h3 {
+    color: #1a2980;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.messages-list {
+    max-height: 350px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.messages-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.messages-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.messages-list::-webkit-scrollbar-thumb {
+    background: #1a2980;
+    border-radius: 4px;
+}
+
+.message-item {
+    background: white;
+    padding: 1.2rem;
+    margin: 0.8rem 0;
+    border-radius: 10px;
+    border-left: 5px solid #26d0ce;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease;
+    opacity: 0;
+    transform: translateX(-20px);
+}
+
+.message-item:hover {
+    transform: translateX(5px);
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.message-header strong {
+    color: #1a2980;
+}
+
+.message-time {
+    color: #718096;
+    font-size: 0.85rem;
+    background: #f7fafc;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+}
+
+.message-content {
+    color: #2d3748;
+    line-height: 1.5;
+}
+
+.docker-volume-info {
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    padding: 2rem;
+    border-radius: 15px;
+    margin: 2rem 0;
+    border: 2px dashed #1a2980;
+}
+
+.docker-volume-info h3 {
+    color: #1a2980;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.code-block {
+    background: #2d3748;
+    color: #e2e8f0;
+    padding: 1.2rem;
+    border-radius: 10px;
+    margin: 1rem 0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
+    overflow-x: auto;
+    white-space: pre-wrap;
+}
+
+.code-block code {
+    background: none;
+    padding: 0;
+}
+
+/* Architecture Section */
+.architecture-section {
+    background: white;
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin: 3rem 0;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.architecture-section h2 {
+    color: #1a2980;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.arch-diagram-detailed {
+    display: flex;
+    justify-content: space-around;
+    align-items: stretch;
+    flex-wrap: wrap;
+    margin: 3rem 0;
+    gap: 2rem;
+}
+
+.arch-component {
+    text-align: center;
+    padding: 2rem;
+    min-width: 250px;
+    flex: 1;
+    background: #f8fafc;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+
+.arch-component:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.arch-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 2.5rem;
+    color: white;
+}
+
+.arch-icon.web {
+    background: linear-gradient(135deg, #1a2980 0%, #26d0ce 100%);
+}
+
+.arch-icon.db {
+    background: linear-gradient(135deg, #9c27b0 0%, #e91e63 100%);
+}
+
+.arch-icon.proxy {
+    background: linear-gradient(135deg, #ff9800 0%, #ff5722 100%);
+}
+
+.arch-component h4 {
+    color: #1a2980;
+    margin: 1rem 0;
+    font-size: 1.3rem;
+}
+
+.arch-component p {
+    color: #4a5568;
+    margin: 0.5rem 0;
+    font-size: 0.95rem;
+}
+
+.arch-arrow {
+    font-size: 2.5rem;
+    color: #1a2980;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+}
+
+.network-info {
+    background: #edf2f7;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-top: 2rem;
+    border-left: 4px solid #1a2980;
+}
+
+.network-info h4 {
+    color: #1a2980;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Commands Section */
+.commands-section {
+    background: white;
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin: 3rem 0;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.commands-section h2 {
+    color: #1a2980;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.commands-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.command-group {
+    background: #f8fafc;
+    padding: 1.8rem;
+    border-radius: 15px;
+    border: 1px solid #e2e8f0;
+}
+
+.command-group h3 {
+    color: #1a2980;
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.command-block {
+    background: #2d3748;
+    color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 0.8rem 0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    transition: background 0.3s ease;
+}
+
+.command-block:hover {
+    background: #1a202c;
+}
+
+.command-desc {
+    color: #a0aec0;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    font-style: italic;
+}
+
+/* Technologies Section */
+.technologies-section {
+    background: white;
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin: 3rem 0;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.technologies-section h2 {
+    color: #1a2980;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.tech-card {
+    text-align: center;
+    padding: 2rem;
+    background: #f8fafc;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(20px);
+    border-top: 4px solid transparent;
+}
+
+.tech-card:nth-child(1) { border-top-color: #3776ab; } /* Python */
+.tech-card:nth-child(2) { border-top-color: #336791; } /* PostgreSQL */
+.tech-card:nth-child(3) { border-top-color: #2496ed; } /* Docker */
+.tech-card:nth-child(4) { border-top-color: #009639; } /* Nginx */
+
+.tech-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.tech-icon {
+    font-size: 3rem;
+    margin-bottom: 1.2rem;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tech-card h3 {
+    color: #1a2980;
+    margin: 1rem 0;
+}
+
+.tech-card p {
+    color: #4a5568;
+    margin: 0.5rem 0;
+    font-size: 0.95rem;
+}
+
+/* API Section */
+.api-section {
+    background: white;
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin: 3rem 0;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.api-section h2 {
+    color: #1a2980;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.api-endpoints {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.endpoint {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    background: #f8fafc;
+    border-radius: 10px;
+    transition: background 0.3s ease;
+    border-left: 4px solid #1a2980;
+}
+
+.endpoint:hover {
+    background: #edf2f7;
+}
+
+.method {
+    padding: 0.3rem 0.8rem;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    min-width: 70px;
+    text-align: center;
+}
+
+.method.get {
+    background: #48bb78;
+    color: white;
+}
+
+.method.post {
+    background: #4299e1;
+    color: white;
+}
+
+.url {
+    font-family: 'Courier New', monospace;
+    color: #2d3748;
+    font-weight: 500;
+    flex: 1;
+}
+
+.desc {
+    color: #718096;
+    font-size: 0.95rem;
+}
+
+/* Volume Demo */
+.volume-demo {
+    background: white;
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin: 3rem 0;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.volume-demo h2 {
+    color: #1a2980;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.demo-steps {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 3rem 0;
+    gap: 1rem;
+}
+
+.demo-step {
+    text-align: center;
+    padding: 1.5rem;
+    flex: 1;
+    min-width: 180px;
+}
+
+.step-number {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #1a2980 0%, #26d0ce 100%);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.demo-step h4 {
+    color: #1a2980;
+    margin: 0.5rem 0;
+}
+
+.demo-step p {
+    color: #4a5568;
+    font-size: 0.9rem;
+}
+
+.demo-arrow {
+    font-size: 2rem;
+    color: #1a2980;
+    font-weight: bold;
+}
+
+.volume-explanation {
+    background: #e3f2fd;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-top: 2rem;
+    border-left: 4px solid #1a2980;
+}
+
+.volume-explanation p {
+    margin: 0.5rem 0;
+}
+
+/* Admin Section */
+.admin-section {
+    background: white;
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin: 2rem 0;
+}
+
+.admin-section h1 {
+    color: #1a2980;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.admin-card {
+    background: #f8fafc;
+    padding: 2rem;
+    border-radius: 15px;
+    border: 1px solid #e2e8f0;
+    transition: all 0
